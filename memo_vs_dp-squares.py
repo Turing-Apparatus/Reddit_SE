@@ -4,9 +4,9 @@ class memo:                                   # memoize
     def __init__(self, fn):
         self.fn, self.m = fn, {}
     def __call__(self, *k):
-        if len(k)==1: k=k[0]
-        if k not in self.m: self.m[k] = self.fn(k)
-        return self.m[k]
+        kk = k[0] if len(k)==1 else k
+        if kk not in self.m: self.m[kk] = self.fn(*k)
+        return self.m[kk]
 
 
 @memo
