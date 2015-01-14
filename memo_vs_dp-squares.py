@@ -25,7 +25,6 @@ def DP(n):
 
 print '       n     DP   Memo'
 for n in [100, 1000, 10000, 100000, 1000000]:
-    sqs = [i*i for i in xrange(int(n**.5)+1)]
     toc,_,tic = time(), DP(n), time()
     toc2,_,tic2 = time(), T(n), time()
     T.m.clear()
