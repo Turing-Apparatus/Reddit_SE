@@ -51,8 +51,7 @@ def eratosthenes(N,M):
             if i*i<=M:  L[i*i] = i
             if i>=N:    yield i
 
-P2 = list(eratosthenes(N,M))[:n]
-
+# P2 = list(eratosthenes(N,M))[:n]
 
 
 
