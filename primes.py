@@ -1,57 +1,55 @@
-################################################################################
-###  OPT
-################################################################################
+import itertools as it
 
 
-def isprime(P,n):                     # DETERMINE IF n IS PRIME
-    root = n**.5                      # ASSUMES P CONTAINS ALL PRIMES <= sqrt(n)
-    for p in P:
-        if n % p == 0: return False
-        elif p > root: return True
-    return True
-
-
-def primes(n):                        # RETURN LIST OF PRIMES <= n
-    P = [2]
-    for i in range(3,int(n)+1,2):
-        if isprime(P,i): P.append(i)
-    return P
-
-
-def nextprimes(N,M,n):                # RETURN FIRST n PRIMES IN INTERVAL [N,M]
-    L = []
-    P = primes(M**.5)
-    i = N + (N%2==0)
-    while len(L)<n and i<=M:
-        if isprime(P,i): L.append(i)
-        i += 2
-    return L
-
-
-
-N,M,n = 10**9, 10**9+10**5, 1000
-P = nextprimes(N,M,n)
+def primes(n):
+    if n<7: return [p for p in [2,3,5] if p<=n]
+    n, offset = n-n%6+6, 2-(n%6>1)
+    P = [True] * (n/3)
+    for i in xrange(1,int(n**0.5)/3+1):
+      if P[i]:
+        k=3*i+1|1
+        P[      k*k/3      ::2*k] = [False] * ((n/6-k*k/6-1)/k+1)
+        P[k*(k-2*(i&1)+4)/3::2*k] = [False] * ((n/6-k*(k-2*(i&1)+4)/6-1)/k+1)
+    return [2,3] + [3*i+1|1 for i in xrange(1,n/3-offset) if P[i]]
 
 
 
 
-################################################################################
-###  SIEVE
-################################################################################
-
-def eratosthenes(N,M):
-    L = {}
-    for i in xrange(2,M):
-        if i in L:
-            p = L.pop(i)
-            x = p+i
-            while x in L: x += p
-            L[x] = p
+def primesI(n,m):
+    L = primes(int(m**.5)+1)
+    P = [True] * (m-n+1)
+    for p in L:
+        if p*p>=n:
+            P[p*p-n::p] = [False] * ((m-p*p)/p+1)
         else:
-            if i*i<=M:  L[i*i] = i
-            if i>=N:    yield i
+            k = (p-n%p)*(n%p>0)
+            P[k::p] = [False] * ((m-n-k)/p + 1)
+    return [i+n for i in xrange(2*(n<2),m-n+1) if P[i]]
 
-# P2 = list(eratosthenes(N,M))[:n]
+
+
+
+def prime_generator(n):
+    P = { 9: 3, 25: 5 }
+    MASK = 1, 0, 1, 1, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0,
+    MODULOS = frozenset( (1, 7, 11, 13, 17, 19, 23, 29) )
+
+    for p in [p for p in [2,3,5] if p<=n]: yield p
+    if n<7: return
+
+    for i in it.compress(
+            it.islice(it.count(7), 0, n-6 if n else None, 2),
+            it.cycle(MASK)):
+
+        if i in P:
+            p = P.pop(i)
+            x = i + p
+            while x in P or (x%30) not in MODULOS:
+                x += p
+            P[x] = p
+        else:
+            if i*i<n: P[i*i] = 2*i
+            yield i
 
 
 
