@@ -3,12 +3,12 @@ from random import shuffle
 
 def solve(s,x,y):
 
-    global B, found, count
+    global B, found
 
     if s==N:
         B[x][y] = s
         found = True
-        print '\n\n', n, count
+        print '\n\n', n
         print_board()
 
     if not found:
@@ -18,7 +18,6 @@ def solve(s,x,y):
         greedy  = [ cost[i][1]              for i in xrange(len(cost))
                                             if  cost[i][0]==cost[0][0] ]
         shuffle(greedy)
-        if  len(greedy)==0:  count += 1
         for gx,gy in greedy: solve(s+1, gx, gy)
         B[x][y] = 0
 
@@ -44,8 +43,7 @@ if __name__ == '__main__':
         A = [[[(i+x,j+y)   for x,y in moves if 0<=i+x<n and 0<=j+y<n]
                             for j in xrange(n)]
                             for i in xrange(n)]
-        count = 0
-        found = False
         B = [[0]*n for i in xrange(n)]
+        found = False
         solve(1,0,0)
 
