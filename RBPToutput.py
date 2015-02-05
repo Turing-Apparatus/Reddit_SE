@@ -27,7 +27,7 @@ THESE NUMBERS COUNT SUCH OCCURENCES
 
 
 _____________________________________________________________________
-FOR EACH (i,j) (k__x) COUNTS THE NUMBER OF WAYS TO GLUE TWO TREES
+(i,j) (k__x) COUNTS THE NUMBER OF WAYS TO GLUE TWO TREES
 IN T[i] AND T[j] SUCH THAT THE RESULT IS A TREE IN T[K]
 
 (1, 1) (2__1)
