@@ -8,10 +8,10 @@ def glue(l,r):
     ns = len(s)
     if ns < N:
         t = 'x({},{})'.format(l[0],r[0])
-        T[ns+1].append((t, s | set([t])))
+        T[ns+1].append( (t,s|set([t])) )
         if l[0]!=r[0]:
             t = 'x({},{})'.format(r[0],l[0])
-            T[ns+1].append((t, s | set([t])))
+            T[ns+1].append( (t,s|set([t])) )
 
 
 
