@@ -2,7 +2,6 @@ from  collections import  defaultdict as ddict
 from  itertools   import  combinations
 from  fractions   import  gcd
 from  math        import  factorial as F
-from  time        import  time
 
 
 def partitions(n):
