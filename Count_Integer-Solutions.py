@@ -1,26 +1,31 @@
-###############################################################
-###               GENERALIZED COMPOSITIONS                  ###
-###                                                         ###
-###       DETERMINE NUMBER OF INTEGER SOLUTIONS X TO:       ###
-###               sum( C[i] * X[i] )  =  n                  ###
-###               sum( X[i]        )  =  m                  ###
-###                 L[i] <= X[i] <= U[i]                    ###
-###############################################################
-##
-##  RUNTIME
-##      TIGHT WORST CASE
-##      LOOSE AVERAGE CASE          :  O( n m^2 k )     because of cv
-##
-##  CHANGE OF VARIABLES             :  O( k )           runtime
-##      OPTIMIZE IV's                  L -> 0,          lower bouds set to 0
-##                                     U -> lub         upper bounds minimized
-##                                     X -> U-Y         reflection
-##                                     C -> C/gcd(C)    coefficient reduce
-##
-##
-##  INPUT                     :  m,n,k,C,L,U integers
-##  OUTPUT                    :  reduced input (m,n,k,C,L,U)'
-##                               S number of solutions for each i,j <= n',m'
+###################################################################################
+###                        GENERALIZED COMPOSITIONS                             ###
+###                                                                             ###
+###                DETERMINE NUMBER OF INTEGER SOLUTIONS X TO:                  ###
+###                        sum( C[i] * X[i] )  =  n                             ###
+###                        sum( X[i]        )  =  m                             ###
+###                          L[i] <= X[i] <= U[i]                               ###
+###                                                                             ###
+###################################################################################
+###                                                                             ###
+###  BOUNDS                                                                     ###
+###      TIGHT WORST CASE                                                       ###
+###      LOOSE AVERAGE CASE          :  O( n m^2 k )     time                   ###
+###                                  :  O( n m )         space                  ###
+###                                                                             ###
+###  CHANGE OF VARIABLES             :  O( k )           runtime                ###
+###      OPTIMIZE IV's                  L -> 0,          lower bouds set to 0   ###
+###                                     U -> lub         upper bounds minimized ###
+###                                     X -> U-Y         reflection             ###
+###                                     C -> abs(C)      positive coefficients  ###
+###                                     C -> C/gcd(C)    coefficients reduced   ###
+###                                                                             ###
+###                                                                             ###
+###  INPUT                     :  m,n,k,C,L,U integers                          ###
+###  OUTPUT                    :  reduced input (m,n,k,C,L,U)'                  ###
+###                               S number of solutions for each i,j <= n',m'   ###
+###                                                                             ###
+##################################################################################
 
 
 from math import factorial as F
@@ -74,7 +79,7 @@ def count_solutions(m, n, k, C, L, U):
         for x in xrange(1, U[i]+1):
             for m_ in xrange(x, mmax+1):                        # I wish you could use n', m'
                 for n_ in xrange(C[i]*x, nmax+1):               # could splice for speedup
-                    S[m_][n_] += SS[m_-x][n_-C[i]*x]            #
+                    S[m_][n_] += SS[m_-x][n_-C[i]*x]
 
     return S, (m,n,k,C,L,U)
 
