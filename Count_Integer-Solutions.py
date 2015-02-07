@@ -14,7 +14,7 @@
 ###                                  :  O( n m )         space                  ###
 ###                                                                             ###
 ###  CHANGE OF VARIABLES             :  O( k )           runtime                ###
-###      OPTIMIZE IV's                  L -> 0,          lower bouds set to 0   ###
+###      OPTIMIZE IV's                  L -> 0,          lower bounds set to 0  ###
 ###                                     U -> lub         upper bounds minimized ###
 ###                                     X -> U-Y         reflection             ###
 ###                                     C -> abs(C)      positive coefficients  ###
@@ -25,13 +25,13 @@
 ###  OUTPUT                    :  reduced input (m,n,k,C,L,U)'                  ###
 ###                               S number of solutions for each i,j <= n',m'   ###
 ###                                                                             ###
-##################################################################################
+###################################################################################
 
 
 from math import factorial as F
 from fractions import gcd
 
-def GCD(x):     return reduce(gcd, x[1:], x[0])                             # gcd OF A LIST
+def GCD(x):     return reduce(gcd, x[1:], x[0])                             # GCD OF A LIST
 def B(n,k):     return 0 if n<k or k<0 else F(n)/F(n-k)/F(k)                # BINOMIAL COEFFICIENTS
 def IE(n,k,u):  return sum( (-1)**i * B(k,i) * B(n+k-1-(u+1)*i,k-1)         # INCLUSION EXCLUSION
                     for i in xrange( min( k, int(n/(u+1)) ) + 1 ))
@@ -41,14 +41,14 @@ def IE(n,k,u):  return sum( (-1)**i * B(k,i) * B(n+k-1-(u+1)*i,k-1)         # IN
 def change_of_variables(m, n, k, C, L, U):
     L    =  [ -U[i] if C[i]<0 else L[i]             for i in xrange(k) ]
     U    =  [ -L[i] if C[i]<0 else U[i]             for i in xrange(k) ]
-    C    =  [ -C[i] if C[i]<0 else C[i]             for i in xrange(k) ]    # POSITIVE COEFFICIENTS
+    C    =  [ -C[i] if C[i]<0 else C[i]             for i in xrange(k) ]    # SET C > 0
     gC   =  GCD(C)
-    C    =  [ C[i]/gC                               for i in xrange(k) ]    # REDUCE COEFFICIENTS
+    C    =  [ C[i]/gC                               for i in xrange(k) ]    # REDUCE C
     n   /=  gC
     m   -=  sum( L )                                                        # SET L=0
     n   -=  sum( C[i] * L[i]                        for i in xrange(k) )
-    U    =  [ min( m, U[i]-L[i] )                   for i in xrange(k) ]    # LOWER BOUNDS SET TO 0
-    U    =  [ min( U[i], n/C[i] ) if C[i] else U[i] for i in xrange(k) ]    # UPPER BOUNDS MINIMIZED
+    U    =  [ min( m, U[i]-L[i] )                   for i in xrange(k) ]
+    U    =  [ min( U[i], n/C[i] ) if C[i] else U[i] for i in xrange(k) ]    # MINIMIZE U
     L    =  [ 0 ] * k
     nmax =  sum( C[i] * U[i]                        for i in xrange(k) )
     mmax =  sum( U )
