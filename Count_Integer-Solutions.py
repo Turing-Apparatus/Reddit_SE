@@ -58,7 +58,7 @@ def change_of_variables(m, n, k, C, L, U):
 
 def count_solutions(m, n, k, C, L, U):
 
-    m,n,k,C,L,U = change_of_variables(m, n, k, C, L, U)
+    m,n,k,C,L,U = change_of_variables( m,n,k,C,L,U )
     nmax = min( n, sum( C[i] * U[i] for i in xrange(k) ) )
     mmax = min( m, sum(U) )
 
@@ -88,7 +88,7 @@ if __name__ == "__main__":
     L = [0]*k                           # lower bounds
     U = [n]*k                           # upper bounds
 
-    S,(n,m,k,C,L,U) = count_solutions(m, n, k, C, L, U)
+    S,(n,m,k,C,L,U) = count_solutions( m,n,k,C,L,U )
     print 'Number of Solutions:', S[-1][-1]
 
     if n==m and min(C)==1==max(C) and min(U)==max(U):
