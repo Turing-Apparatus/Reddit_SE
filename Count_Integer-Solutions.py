@@ -1,38 +1,96 @@
 ###############################################################
-###     DETERMINE NUMBER OF SOLUTIONS TO:                   ###
-###         sum( Ci * Xi ) = n      Xi unknown              ###
-###         sum( Xi ) = m                                   ###
-###         Li <= Xi <= Ui                                  ###
+###               GENERALIZED COMPOSITIONS                  ###
+###                                                         ###
+###       DETERMINE NUMBER OF INTEGER SOLUTIONS X TO:       ###
+###               sum( C[i] * X[i] )  =  n                  ###
+###               sum( X[i]        )  =  m                  ###
+###                 L[i] <= X[i] <= U[i]                    ###
 ###############################################################
+##
+##  RUNTIME
+##      TIGHT WORST CASE
+##      LOOSE AVERAGE CASE          :  O( n m^2 k )     because of cv
+##
+##  CHANGE OF VARIABLES             :  O( k )           runtime
+##      OPTIMIZE IV's                  L -> 0,          lower bouds set to 0
+##                                     U -> lub         upper bounds minimized
+##                                     X -> U-Y         reflection
+##                                     C -> C/gcd(C)    coefficient reduce
+##
+##
+##  ASSUMPTIONS                     :  C,U,L,n,m integers
+##
 
-def count_solutions(C, L, U, n, m):
 
-    for i in xrange(len(C)):
-        U[i] -= L[i]
-        n -= C[i]*L[i]
-        m -= L[i]
+from math import factorial as F
+from fractions import gcd
 
-    if n < 0 or m < 0: return 0
+def GCD(x):     return reduce(gcd, x[1:], x[0])                             # gcd OF A LIST
+def B(n,k):     return 0 if n<k or k<0 else F(n)/F(n-k)/F(k)                # BINOMIAL COEFFICIENTS
+def IE(n,k,u):  return sum( (-1)**i * B(k,i) * B(n+k-1-(u+1)*i,k-1)         # INCLUSION EXCLUSION
+                    for i in xrange( min( k, int(n/(u+1)) ) + 1 ))
 
-    U = [ min((m, U[i], n/C[i])) for i in xrange(len(U))]
-    cache = [[0]*(n+1) for i in xrange(m+1)]
-    cache[0][0] = 1
 
-    for i in xrange(len(C)):
-        temp = [list(ch) for ch in cache]
+
+def change_of_variables(m, n, k, C, L, U):
+    L    =  [ -U[i] if C[i]<0 else L[i]             for i in xrange(k) ]
+    U    =  [ -L[i] if C[i]<0 else U[i]             for i in xrange(k) ]
+    C    =  [ -C[i] if C[i]<0 else C[i]             for i in xrange(k) ]    # POSITIVE COEFFICIENTS
+    gC   =  GCD(C)
+    C    =  [ C[i]/gC                               for i in xrange(k) ]    # REDUCE COEFFICIENTS
+    n   /=  gC
+    m   -=  sum( L )                                                        # SET L=0
+    n   -=  sum( C[i] * L[i]                        for i in xrange(k) )
+    U    =  [ min( m, U[i]-L[i] )                   for i in xrange(k) ]    # LOWER BOUNDS SET TO 0
+    U    =  [ min( U[i], n/C[i] ) if C[i] else U[i] for i in xrange(k) ]    # UPPER BOUNDS MINIMIZED
+    L    =  [ 0 ] * k
+    nmax =  sum( C[i] * U[i]                        for i in xrange(k) )
+    mmax =  sum( U )
+
+    if nmax>n and mmax>m and (nmax-n)*(mmax-m)<n*m:                         # REFLECTION
+        n,m  =  nmax-n, mmax-m
+    nmax, mmax = min(n,nmax), min(m,mmax)
+
+    return m,n,k,C,L,U
+
+
+
+
+def count_solutions(m, n, k, C, L, U):
+
+    m, n, k, C, L, U = change_of_variables(m, n, k, C, L, U)
+    nmax = min( n, sum( C[i] * U[i] for i in xrange(k) ) )
+    mmax = min( m, sum(U) )
+
+    if  n<0  or  m<0  or  min(U)<0:
+        return [[0]], (m,n,k,C,L,U)
+
+    S = [ [0]*(n+1) for i in xrange(m+1) ]
+    S[0][0] = 1
+
+    for i in xrange(k):
+        SS = [ list(s) for s in S ]                             # can probably reorder DP
         for x in xrange(1, U[i]+1):
-            for mm in xrange(x, m+1):
-                for nn in xrange(C[i]*x, n+1):
-                    cache[mm][nn] += temp[mm-x][nn-C[i]*x]
-    return cache[m][n]
+            for m_ in xrange(x, mmax+1):                        # I wish you could use n', m'
+                for n_ in xrange(C[i]*x, nmax+1):               # could splice for speedup
+                    S[m_][n_] += SS[m_-x][n_-C[i]*x]
+
+    return S, (m,n,k,C,L,U)
 
 
-k = 20                              # number of unknowns
-n = 100                             # sum C.X
-m = 20                              # sum X
-C = range(1,k+1)                    # constants
-L = [0]*k                           # lower bounds
-U = [6]*k                           # upper bounds
 
 
-print 'Number of solutions:', count_solutions(C, L, U, n, m), '\n'
+if __name__ == "__main__":
+    m = 50                              # sum X
+    n = 100                             # sum C.X
+    k = 20                              # number of unknowns
+    C = range(1,k+1)                    # coefficients
+    L = [0]*k                           # lower bounds
+    U = [n]*k                           # upper bounds
+
+    S,(n,m,k,C,L,U) = count_solutions(m, n, k, C, L, U)
+    print 'Number of Solutions:', S[-1][-1]
+
+    if n==m and min(C)==1==max(C) and min(U)==max(U):
+        print 'Inclusion Exclusion IE({},{},{})='.format(n,k,U[0]),
+        print IE(n,k,U[0])

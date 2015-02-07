@@ -1,0 +1,36 @@
+[^ G]               - goto line in file
+[cmd ctrl F]        - replace
+[cmd ^ F]           - find in open folders
+[cmd T]             - go to file
+[cmd ^ P]           - command palette
+
+[cmd K U]           - uppercase
+[cmd K L]           - lowercase
+
+[cmd D]             - add next occurrence of current
+                        word to selection
+                    - [cmd U] to undo
+[cmd ctrl G]        - add all
+
+[ctrl ^ up/down]    - add next line to selection
+[cmd opt]           - select chunk of text
+
+
+[cmd J]             - join lines
+[ctrl space]        - auto complete
+[ctrl m]            - jump to matching brackets
+
+[cmd z]             - undo
+[cmd y]             -  redo
+
+[cmd /]             - comment
+[cmd ^ D]           - duplicate line
+
+[cmd k k]           - delete to end of line
+[cmd k delete]      - delete from start of line
+[ctrl ^ k]          - delete line
+
+[cmd enter]         - insert line after (inter text)
+[cmd ^ enter]       - insert line before (inter text)
+
+[cmd opt s]         - save all
