@@ -61,8 +61,8 @@ def max_match(Ea,A,B,n):
 def aug_path(Ea,M,A,B,n):
     Ma = adjacency(M)
     rMa = adjacency( (j,i) for (i,j) in M )
-    A_ = A - set(Ma.keys())                             # EXPOSED A
-    B_ = B - set(rMa.keys())                            # EXPOSED B
+    A_ = A - set(Ma)                                    # EXPOSED A
+    B_ = B - set(rMa)                                   # EXPOSED B
     prev = [-1]*(2*n)
     it, L, nodes = 0, A_, A_
 
