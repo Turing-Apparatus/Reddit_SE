@@ -62,8 +62,8 @@ def shapes(n):
         if h>b*(b+2*t):     return False                    # too wide for below
         if m!=0:            return True
         p = [1+sum(s[:i])       for i in xrange(len(s)+1)]
-        return reduce(and_, (s[i+1] <= 2*s[i]+p[i]          # too wide for above
-                                for i in xrange(len(s)-1)))
+        return ( reduce(and_, (s[i+1] <= 2*s[i]+p[i]        # too wide for above
+                                for i in xrange(len(s)-1))) and s[1]<5 )
 
     S = []
     comp((1,1),n-3)                                         # dag ends in (1,1)
@@ -86,7 +86,7 @@ def count(s):
     l,ll,lll =  s[0], s[1], sum(s[2:])
     n,m      =  l+ll+lll, ll+lll
 
-    for cov,v in D[s[1:]].items():                  # for each cover of s[1:]
+    for cov,v in D[s[1:]].items():          # for each cover of s[1:]
         if v==0:continue
 
         for a in xrange(1,min(2*l,ll)+1):
@@ -103,7 +103,8 @@ def count(s):
     if l==1:
         global T
         T[n] += D[s][(1<<m)-1]              # top layer 1 and all nodes covered
-
+        return D[s][(1<<m)-1]
+    return 0
 
 
 
@@ -113,16 +114,17 @@ def count(s):
 
 if __name__ == '__main__':
 
-    n     =  15
+    n     =  13
     S     =  shapes(n)                       # shapes
-    D     =  {(1,):{0:1}, (1,1):{1:1}}       # node coverings  (t/f assignments)
+    D     =  {(1,):{0:1}, (1,1):{1:1}}         # node coverings  (t/f assignments)
     Dh    =  {}                              # history of D    (memory clean)
     T     =  [0,1,1]+[0]*n                   # DAG counts      (solution)
 
     for i,shape in enumerate(S):
         if i>500 and i%500==0: mem_clean()
-        count(shape)
-        print i, len(S), sum(T), len(D), shape
+        c = count(shape)
+        print i, len(S), len(D), sum(T),
+        print '\t\tT({}) = {}'.format(''.join(str(l) for l in shape), c)
 
     for i in xrange(1,n+1):
         print i, T[i]
