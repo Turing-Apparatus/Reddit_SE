@@ -27,7 +27,6 @@ def get_trees():
         print n, len(T[n])
 
 
-
 N = 7
 T = [[] for i in xrange(N+1)]
 count = 1

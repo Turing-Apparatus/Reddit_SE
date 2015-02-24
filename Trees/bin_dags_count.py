@@ -55,7 +55,7 @@ def mem_clean():
 ##
 def B(n,k):         return 0 if n<k or k<0 else F(n)/F(n-k)/F(k)
 def BB(h,b,t):      return B(b*(b+2*t), h)      # count plane trees
-# def BB(h,b,t):    return B(B(b,2)+b*t,h)        # forget the "plane"
+# def BB(h,b,t):    return B(B(b,2)+b*t+b,h)        # forget the "plane"
 @memo
 def M(h,b,t):
     return sum( (-1)**k * sum( B(b,i) * B(t,k-i) * BB(h,b-i,t-k+i)
