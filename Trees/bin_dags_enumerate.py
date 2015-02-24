@@ -18,13 +18,8 @@ def next_tree(s):
 
 
 
-if __name__ == '__main__':
-
-    N = 7
-    T = [[] for i in xrange(N+1)]
-    count = 1
+def get_trees():
     next_tree(set())
-
     for n in xrange(2,N+1):
         for l,r in product(T[n-1], reduce(add,T[1:n-1],[]) ):   glue(l,r)
         for l,r in combinations(T[n-1],2):                      glue(l,r)
@@ -32,5 +27,10 @@ if __name__ == '__main__':
         print n, len(T[n])
 
 
+
+N = 7
+T = [[] for i in xrange(N+1)]
+count = 1
+get_trees()
 
 
