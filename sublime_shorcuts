@@ -1,6 +1,7 @@
 [^ G]               - goto line in file
-[cmd ctrl F]        - replace
+[cmd ctrl F]        - fullscreen
 [cmd ^ F]           - find in open folders
+[cmd opt F]         - find/replace
 [cmd T]             - go to file
 [cmd ^ P]           - command palette
 

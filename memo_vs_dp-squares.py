@@ -1,13 +1,5 @@
 from time import time
-
-class memo:                                   # memoize
-    def __init__(self, fn):
-        self.fn, self.m = fn, {}
-    def __call__(self, *k):
-        kk = k[0] if len(k)==1 else k
-        if kk not in self.m: self.m[kk] = self.fn(*k)
-        return self.m[kk]
-
+from Decorators import memo
 
 @memo
 def T(n):
@@ -20,7 +12,6 @@ def DP(n):
     for i in xrange(1, n+1):
         T[i] = min ( T[i-x*x] for x in xrange(1,int(i**.5)+1) ) + 1
     return T
-
 
 
 print '       n     DP   Memo'

@@ -22,7 +22,7 @@ class memo:
 
 
 ##
-## Memory Usage
+## MEMORY USAGE
 ## might not be portable
 ##
 from resource import getrusage, RUSAGE_SELF
@@ -54,7 +54,8 @@ def mem_clean():
 ## BINOMIAL COEFFICIENTS AND IE COUNT
 ##
 def B(n,k):         return 0 if n<k or k<0 else F(n)/F(n-k)/F(k)
-def BB(h,b,t):      return B(b*(b+2*t), h)
+def BB(h,b,t):      return B(b*(b+2*t), h)      # count plane trees
+# def BB(h,b,t):    return B(B(b,2)+b*t,h)        # forget the "plane"
 @memo
 def M(h,b,t):
     return sum( (-1)**k * sum( B(b,i) * B(t,k-i) * BB(h,b-i,t-k+i)
@@ -131,7 +132,7 @@ def count(s):
 
 if __name__ == '__main__':
 
-    n     =  21
+    n     =  14
     S     =  shapes(n)                       # shapes
     D     =  {(1,):{0:1}, (1,1):{1:1}}       # node coverings  (t/f coverings)
     T     =  [0,1,1]+[0]*n                   # DAG counts      (solution)
