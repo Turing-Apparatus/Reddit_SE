@@ -1,6 +1,6 @@
 from itertools import product
 from collections import defaultdict as ddict
-from random import randint
+from random import randint, random
 inf = float('inf')
 
 
@@ -124,7 +124,7 @@ def hungarian(C):
 
 
 if __name__ == "__main__":
-    n = 200
+    n = 100
     C = [[randint(1,1000) for i in xrange(n)] for j in xrange(n)]
     M = hungarian(C)
     print sum (C[i][j] for (i,j) in M)
