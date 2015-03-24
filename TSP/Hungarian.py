@@ -1,7 +1,7 @@
 from itertools import product
 from collections import defaultdict as ddict
-from time import time
-from random import randint as rint
+from random import randint
+inf = float('inf')
 
 
 # MIN AND MAX OF A MATRIX
@@ -22,6 +22,9 @@ def standard(C):
     n,m = len(C), len(C[0])
     mn,mx = mmin(C), mmax(C)
     d,mx = max(n,m), mx+abs(mn)
+    if mn == inf:
+        print 'ERROR: NO PERFECT MATCHING'
+        exit()
     return [[ C[i][j]-mn if (i<n and j<m) else mx   for j in xrange(d)]
                                                     for i in xrange(d)]
 
@@ -31,8 +34,9 @@ def standard(C):
 def minimize_rows(W,Ea,n):
     for i in xrange(n):
         mr = min(W[i])
-        W[i] = [x-mr for x in W[i]]
-        Ea[i] |= set([n+j for j in xrange(n) if W[i][j]==0])
+        if mr < inf:
+            W[i] = [x-mr for x in W[i]]
+            Ea[i] |= set([n+j for j in xrange(n) if W[i][j]==0])
 
 
 
@@ -40,7 +44,8 @@ def minimize_rows(W,Ea,n):
 def minimize_cols(W,Ea,n):
     for j in xrange(n):
         mc = min(W[i][j] for i in xrange(n))
-        for i in xrange(n): W[i][j] -= mc
+        if mc < inf:
+            for i in xrange(n): W[i][j] -= mc
     for i in xrange(n):
         Ea[i] |= set([n+j for j in xrange(n) if W[i][j]==0])
 
@@ -103,6 +108,9 @@ def hungarian(C):
         H,L = max_match(Ea,A,B,n)                                   # MAXIMUM MATCHING OF SUBGRAPH E
         if len(H) == n: return [(i,j%n) for (i,j) in H]
         d = min( W[i][j%n] for i,j in product(A&L,B-L) )            # MINIMUM UNCOVERED ELEMENT
+        if d == inf:
+            print 'ERROR: NO PERFECT MATCHING'
+            exit()
         for i,j in product(A&L,A):
             W[i][j] -= d                                            # SUBTRACT d FROM UNTICKED ROWS
             if W[i][j]==0: Ea[i].add(n+j)
@@ -117,9 +125,7 @@ def hungarian(C):
 
 if __name__ == "__main__":
     n = 200
-    C = [[rint(1,1000) for i in xrange(n)] for j in xrange(n)]
-    toc = time()
+    C = [[randint(1,1000) for i in xrange(n)] for j in xrange(n)]
     M = hungarian(C)
     print sum (C[i][j] for (i,j) in M)
-    print time()-toc
 
