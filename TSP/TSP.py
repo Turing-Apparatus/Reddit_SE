@@ -93,9 +93,8 @@ def TSP_brute(G):
 
 if __name__ == "__main__":
     n = 50
-    G = [[ randint(1,100) if i!=j else inf      for i in xrange(n)] # WEIGHTED ADJACENCY MATRIX
-                                                for j in xrange(n)] # USE inf FOR MISSING EDGES
-                                                                    # NO SELF-LOOPS (DIAGONAL = inf)
+    G = [[ randint(0,100)       for i in xrange(n)]     # WEIGHTED ADJACENCY MATRIX
+                                for j in xrange(n)]     # USE inf FOR MISSING EDGES
 
 
     tour = TSP(G)
